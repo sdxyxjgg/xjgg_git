@@ -1,0 +1,398 @@
+配置信息
+全局信息
+ git config --global user.email "3250403060@qq.com"
+ git config --global user.name "xjgg"
+局部信息
+ cd git
+ mkdir code
+ cd code
+ git init
+ cd .\git
+ git config user.email "3250403060@qq.com"
+ git config user.name "xjgg"
+
+创建新厂库
+git init
+旧厂库
+git clone https://github.com/houdunwang/cart.git
+
+命令完成流水线控制
+touch a.php   //建立一个文件
+git status   //查看状态$ git add a.php //放到运输车上
+//多个放到运输车上    git add .  //代表全部放到车上
+$ git commit -m "提交的简介（自己随便写）"
+
+.gitignore文件解决不提交谁（这样配合提交全部就可以实现想提交什么就提交什么）
+cd code
+code .gitignore
+里面写的内容：
+1.
+*.php   //忽略所有后缀为php的（git status查看）
+
+2.
+*.php
+!e.php  //忽略所有后缀为php的,除了e.php（git status查看）
+
+3.文件夹
+/vendor   //忽略这个文件夹及这个文件夹里面的所有文件及所有文件夹
+/vendor/*.txt   //有子文件夹的时候还是不行
+/vendor/**/*   //忽略这个文件夹及这个文件夹里面的所有文件及所有文件夹
+
+、、、、、、、、、、、、、、、、、、
+
+从厂库中删除
+cd xjgg
+git rm a.php    //删除厂库中的，还删除当前文件夹中的
+git rm --cached b.php   //删除厂库中的，不删除文件夹中的
+git commit -m 'rm.' //删除需要提交一下
+
+
+修改厂库中的资料名称
+cd xjgg
+git mv a.php xjgg.php   //修改名称
+git status
+git commit -m 'mv'
+git log --name-only
+
+
+使用log日志查看历史操作
+cd xjgg
+vim b.php
+git status
+cat b.php    //查看文件内容
+git commit -m 'vim'
+git log   //查看日志
+git log -p  //查看详细信息
+git log -p -2 //查看2行
+git log --oneline   //查看简略信息
+git log --oneline -p   //查看详细信息
+git log --name-only  //查看文件名操作
+git log --name-status  //查看文件操作
+
+
+使用amend修改最新一次提交事件
+cd xjdd
+git init
+touch a.php
+git add .
+git commit -m '123'
+git commit --amend
+
+
+管理缓存中的文件（就是运输车上的文件）
+cd cache
+git init
+touch xjgg.php
+git add .
+git status
+git rm --cached xjgg.php
+git status
+git add .
+git commit -m 'com'
+vim xjgg.php
+cat xjgg.php
+git status
+git add .
+git status
+git rm --cached xjgg.php
+git status    // (use "git restore --staged <file>..." to unstage)
+git restore --staged xjgg.php    // modified:   xjgg.php
+cat xjgg.php    //
+git checkout -- xjgg.php    //把厂库里面的文件内容覆盖到文件夹中
+cat xjgg.php    //     
+
+
+alias命令别名
+全局
+cd 
+git config --global alias.a add    //把add简写为a
+code .gitconfig
+局部
+cd .git
+git config alias.c commit
+code config
+
+
+分支Branch
+git branch      //显示分支（只有提交过才有分支）
+cd branch
+git init
+touch a.php
+git a .
+git commit -m '23'
+git branch  //master    //主分支
+git branch xjgg   //添加副分支xjgg
+git checkout xjgg   //使用副分支
+touch xjgg.php
+vim xjgg.php
+cat xjgg.php
+git a .
+git commit -m '1233'
+git checkout -b xjdd   //添加副分支并使用
+vim xjgg.php
+cat xjgg.php
+git a .
+git commit -m '1233'
+git checkout master
+分支合并
+git checkout master   //先切换到主分支
+git merge xjgg   //把xjgg分支合并到主分支
+ll
+car xjgg.php
+git branch -d xjgg   //删除副分支
+git branch
+//此时删除xjdd
+git branch -d xjdd   //If you are sure you want to delete it, run 'git branch -D xjdd'.
+//因为还没有合并出于安全考虑不让删除，若执意删除
+git branch -D xjdd
+//若没删除，直接合并，由于都是更改了xjgg.php，导致xjdd无法合并
+vim xjgg.php  //<<<<<<< HEAD小贱哥哥真帅=======下贱阿萨德还看见爱上的空间阿萨德>>>>>>> xjdd
+git merge xjdd   //改完之后再合并
+git status
+git add xjgg.php
+git commit -m '1111'
+cat xjgg.php
+git branchm -d xjdd
+分支管理   --merged  和 --no-merged
+git checkout -b xjgg
+vim a.php
+git a .
+git commit -m '1'
+git checkout -b xjdd
+vim a.php
+git a .
+git commit -m '2'
+git checkout master     //先切换到主分支
+git branch --merged     //查看已合并的
+git branch --no-merged  //查看未合并的
+//没合并没法-d删除，要-D
+git branch -d xjgg
+git branch -D xjgg
+git merge xjdd
+git branch --merged
+git branch -d xjdd
+
+
+
+stash临时存储实例讲解
+cd git
+rm -rf *
+mkdir xjgg
+cd xjgg
+git init 
+touch a.php
+git add .
+git commit -m '2123'
+git branch
+git checkout -b xjgg
+vim ask.php
+git add .
+git status
+git commit -m '1211'
+vim ask.php
+git add .
+git status
+git checkout -b xjdd        //会发现没法转了
+git stash       //放入临时缓存里面
+git stash list  //缓存列表
+git checkout xjdd   //就不报错了
+git checkout xjgg
+git stash apply    //释放缓存
+git stash list
+git stash drop stash@{0}    //删除这个缓存
+git stash
+git stash pop   //释放缓存并删除
+ll
+vim 111.php
+git add .
+git stash
+vim 222.php
+git add .
+gti stash
+ll
+git stash pop
+ll
+git stash pop
+ll
+git add .
+git commit -m '1123234'
+
+
+
+使用TAG标签声明版本
+git tag     //查看有几个版本
+git tag v1.0.1
+git tag v1.0.2
+git tag
+
+
+生成压缩包
+git archive master --prefix='xjgg/' --forma=zip >xjgg.zip
+git archive xjgg --prefix='xjgg/' --forma=zip >xjgg.zip
+git checkout master
+git merge xjgg
+git merge xjdd
+git branch -d xjgg
+git branch -d xjdd
+git branch
+git archive master --prefix='xjgg/' --forma=zip >xjgg.zip
+
+
+使用系统别名定义git全局指令
+cd 
+code .bash_profile      //没有自己创建一个
+内容：、、、、、、、、、
+alias gs="git status"
+alias gc="git commit -m "
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit  "
+alias gb="git branch"
+alias ga="git add ."
+alias go="git checkout"
+、、、、、、、、、、、、、、、、、、
+
+
+
+合并分支产生的实际问题演示
+rm -rf *
+cd xjgg
+git init
+touch a.php
+git add .
+git commit -m 'master commit'
+git checkout -b ask
+vim ask.php
+git add .
+git commit -m 'ask commit'
+git checkout master
+vim a.php
+git add .
+git commit -m 'master 2 commit'
+git merge ask
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit  
+//用上面那个查看就会发现非常的乱
+（不起作用需要重启终端 （.bash_profile））
+
+
+解决问题（rebase合理优化分支合并）
+git init
+touch a.php
+git add .
+git commit -m 'master commit'
+git checkout -b ask
+vim ask.php
+git add .
+git commit -m 'ask commit'
+git checkout master
+vim a.php
+git add .
+git commit -m 'master 2 commit'
+git checkout ask
+git rebase master   //让主分支跑到最新的位置（以后推荐使用此方法，保证数据安全性）
+git checkout master
+git merge ask
+ll
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit  
+//这样就不会很乱
+git branch -d ask
+
+
+
+//github
+https://github.com
+username:sdxyxjgg
+password:xing78910
+email:3250403060@qq.com
+
+
+
+使用ssh远程服务器操作(clone)
+（从服务器克隆下来）
+cd 
+ssh-keygen -t rsa
+cd .ssh
+ls 
+code id_rsa.pub
+然后复制
+详情看后盾人文档
+
+cd 
+cd git
+git clone git@github.com:sdxyxjgg/xjggtest01.git
+选yes
+cd xjggtest01
+vim desc.txt
+ga
+gc 'frist'
+git push    //推到远程
+
+
+//如果后续连不上(解决办法)（后续把ssh密匙改了）
+cd
+cd .ssh
+ls
+code known_hosts        //把里面的缓存记录删了就ok了（第一次是没有这个文件的）
+
+
+
+使用ssh远程服务器操作(remote)
+（从本地推到远程（远程见一个空的））
+cd
+cd git 
+mkdir xjgg
+cd xjgg
+git init
+vim README.md
+ga
+gc ''
+gl
+git remote add origin git@github.com:sdxyxjgg/xjggtest02.git    //添加远程库
+git push -u origin master       //推送远程库
+git remote rm origin    //删除远程厂库关联
+git remote -v       //查看远程库
+
+
+
+本地分支与远程分支同步
+cd xjgg
+gb -a
+go -b ask
+vim index.html
+ga
+gc
+gb -a
+git push --set-upstream origin ask      //远程推送分支
+gb -a
+
+本地下载远程实现分支同步（pull）
+git clone git@github.com:sdxyxjgg/xjggtest02.git xjggtest02
+cd xjggtest02
+gb -a
+git pull origin ask:ask     //请求远程把分支拿过来
+go ask
+ll
+touch aaa.php
+touch bbb.php
+ga
+gc 'ask commit'
+git push --set-upstream origin ask
+
+远程分支的合并
+还是接上一个
+go ask
+go master
+git pull    //主分支先pull一下
+go ask
+git rebase master       //让主分支跑到最新的位置（以后推荐使用此方法，保证数据安全性）
+go master
+git merge ask       //然后合并
+git push        //然后提交
+git branch --merged     //查看已经合并的
+
+远程分支删除（delete）
+还是接上一个
+go master
+git push origin --delete ask    //这样只是删除了远程的，本地的并没有删除（分布式的体现）
+gb -a
+git branch -d ask       //删除本地分支
+
+

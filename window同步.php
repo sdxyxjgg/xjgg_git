@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 //自配window系统，需要先安装git软件
 $secret = "xjgg";
 $path = 'C:/Program Files/Git/bin';
-$dir = "C:/wamp64/www/sync/xjgg";
+$dir = "C:\wamp64\www\sync\xjgg"; //路径最好是这样的，不然批处理命令不认识
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
 
 if ($signature) {
